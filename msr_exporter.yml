@@ -1,0 +1,2 @@
+address: localhost:9091
+interface: "/dev/cpu/%d/msr"

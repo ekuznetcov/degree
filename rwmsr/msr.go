@@ -1,4 +1,4 @@
-package msr
+package rwmsr
 
 import (
 	"fmt"
