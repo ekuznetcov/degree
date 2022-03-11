@@ -5,8 +5,7 @@ After=network-online.target
 
 [Service]
 User=root
-EnvironmentFile=/etc/default/msr_exporter
-ExecStart=/opt/msr_exporter/msr_exporter $OPTIONS
+ExecStart=/opt/msr_exporter/msr_exporter
 Restart=on-failure
 RestartSec=5
 

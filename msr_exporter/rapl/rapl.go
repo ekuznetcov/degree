@@ -3,7 +3,7 @@ package rapl
 import (
 	"fmt"
 
-	"msr_exporter/rwmsr"
+	"escheduler/msr_exporter/rwmsr"
 
 	"github.com/pkg/errors"
 )

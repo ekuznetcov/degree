@@ -1,10 +1,10 @@
 package main
 
 import (
+	"escheduler/msr_exporter/rapl"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"msr_exporter/rapl"
 	"net/http"
 	"path/filepath"
 	"regexp"
@@ -108,7 +108,7 @@ func main() {
 			fmt.Println(err)
 		}
 
-		var responseText string //Переменная под текст ответа для Prometheus
+		var responseText string
 		for domain := range domains {
 			responseText += fmt.Sprintf("msr_rapl_%s_joules_total{} %f\n ", domain, domains[domain])
 			fmt.Println(responseText)

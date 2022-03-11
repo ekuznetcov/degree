@@ -1,24 +1,5 @@
 package rapl
 
-// Читает RAPL регистры с процессоров (>sandybridge) Intel и AMD(Zen)
-
-//   Существует три способа для чтения информации с доменов RAPL:
-//  	1. Читать msr-регистры напрямую с /dev/cpu/??/msr
-//  	2. Через perf_event_open() interface
-//  	3. Читать с помощью sysfs powercap
-
-//   Для чтения сырых данных из msr-регистров /dev/cpu/%d/msr драйвер должен быть установлен и
-//  	должно быть установлено разрешение на чтение.
-//  	Возможно надо будет выполнить команду "modprobe msr" перед началом работы.
-
-//   perf_event_open() support requires at least Linux 3.14 and to have
-//  	/proc/sys/kernel/perf_event_paranoid <
-//	 не поддерживается AMD процессорами
-
-//   sysfs powercap interface доступен из ядра с
-//  	2d281d8196e38dd (3.13)
-//	 не поддерживается AMD процессорами
-
 //DomainMSR определяет адреса для различных msr-регистров
 type DomainMSRs struct {
 	PowerLimit   int64
