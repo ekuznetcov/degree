@@ -8,10 +8,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-//RAPLHandler manages a stateful connection to the RAPL system.
+//RAPLHandler управляет соединением с доменами RAPL с сохранением состояния
 type RAPLHandler struct {
-	availDomains []RAPLDomain //Available RAPL domains
-	domainMask   uint         //a bitmask to make it easier to find available domains
+	availDomains []RAPLDomain //Доступны домены RAPL
+	domainMask   uint         //битовая маска, для удобства поиска поддерживаемых доменов
 	msrDev       rwmsr.MSRDev
 	units        RAPLPowerUnit
 }
@@ -53,19 +53,18 @@ func getAvailableDomains(cpu int, msr rwmsr.MSRDev) ([]RAPLDomain, uint) {
 }
 
 //CreateNewHandler создает обработчик для регистра RAPL для заданного CPU
-func CreateNewHandler(cpu int, fmtS string) (RAPLHandler, error) {
-
+func CreateNewHandler(cpu int, fmtStr string) (RAPLHandler, error) {
 	var msr rwmsr.MSRDev
 	var err error
-	if fmtS == "" {
+	if fmtStr == "" {
 		msr, err = rwmsr.MSR(cpu)
 		if err != nil {
 			return RAPLHandler{}, errors.Wrap(err, "error creating MSR handler")
 		}
 	} else {
-		msr, err = rwmsr.MSRWithLocation(cpu, fmtS)
+		msr, err = rwmsr.MSRWithLocation(cpu, fmtStr)
 		if err != nil {
-			return RAPLHandler{}, errors.Wrapf(err, "error creating MSR handler with location %s", fmtS)
+			return RAPLHandler{}, errors.Wrapf(err, "error creating MSR handler with location %s", fmtStr)
 		}
 	}
 
@@ -192,4 +191,9 @@ func (handler RAPLHandler) ReadPowerUnit() (RAPLPowerUnit, error) {
 // GetDomains возвращает список доступных доменов
 func (handler RAPLHandler) GetDomains() []RAPLDomain {
 	return handler.availDomains
+}
+
+// Close закрывает дескриптор
+func (handler RAPLHandler) Close() {
+	handler.msrDev.Close()
 }
