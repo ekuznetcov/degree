@@ -7,18 +7,18 @@ import (
 
 const defaultFmtStr = "/dev/cpu/%d/msr"
 
-//MSRDev provides a handler for frequent read/write operations
-//for one-off MSR read/writes, gomsr provides {Read, Write} MSR*() functions
+//MSRDev предоставляет обработчик для операция чтения и записи
+//для разового чтения/записи MSR, rwmsr предоставляет функцию {Read, Write} MSR*()
 type MSRDev struct {
 	fd int
 }
 
-//Close closes the connection to the MSR register
-func (d MSRDev) Close() error {
-	return syscall.Close(d.fd)
+//Close закрывает соединение с MSR-регистром
+func (dev MSRDev) Close() error {
+	return syscall.Close(dev.fd)
 }
 
-//MSR provides the interface for reccuring acces to MSR interface
+//MSR предоставляет интерфейс для повторного считывания из MSR регистров
 func MSR(cpu int) (MSRDev, error) {
 	cpuDir := fmt.Sprintf(defaultFmtStr, cpu)
 	fd, err := syscall.Open(cpuDir, syscall.O_RDWR, 777)
@@ -28,9 +28,9 @@ func MSR(cpu int) (MSRDev, error) {
 	return MSRDev{fd: fd}, nil
 }
 
-//MSRWithLocation is tha same as MSR(), but takes a custom location,
-//for use with testing or 3rd party utilities like llnl/msr-safe
-//It takes a string that has a %d format for the CPU. For example /dev/cpu/%d/msr_safe
+//MSRWithLocation как MSR(), дополнительно принимает пользовательский путь,
+//Для возможности использовать сторонний драйвер, например llnl/msr-safe
+//На вход принимает строку содержащую %d для CPU. Пример /dev/cpu/%d/msr_safe
 func MSRWithLocation(cpu int, fmtString string) (MSRDev, error) {
 	cpuDir := fmt.Sprintf(fmtString, cpu)
 	fd, err := syscall.Open(cpuDir, syscall.O_RDWR, 777)

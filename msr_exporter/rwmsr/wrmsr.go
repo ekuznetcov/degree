@@ -6,7 +6,8 @@ import (
 	"syscall"
 )
 
-//Write writes a given val to the provided register
+//Write пишет заданное значение в заданный msr-регистр
+//val - значение, addr - адрес регистра
 func (d MSRDev) Write(addr int64, val uint64) error {
 	buf := make([]byte, 8)
 
@@ -23,9 +24,9 @@ func (d MSRDev) Write(addr int64, val uint64) error {
 	return nil
 }
 
-//WriteMSRWithLocation is like WriteMSR(), but takes a custom location,
-//for use with testing or 3rd party utilities like llnl/msr-safe
-//It takes a string that has a `%d` format specifier for the cpu. For example: /dev/cpu/%d/msr_safe
+//WriteMSRWithLocation как WriteMSR(), дополнительно принимает пользовательский путь,
+//Для возможности использовать сторонний драйвер, например llnl/msr-safe
+//На вход принимает строку содержащую %d для CPU. Пример /dev/cpu/%d/msr_safe
 func WriteMSRWithLocation(cpu int, msrAddr int64, val uint64, fmtStr string) error {
 	msr, err := MSRWithLocation(cpu, fmtStr)
 	if err != nil {
@@ -40,7 +41,7 @@ func WriteMSRWithLocation(cpu int, msrAddr int64, val uint64, fmtStr string) err
 	return msr.Close()
 }
 
-//WriteMSR() writes the val in MSR on the given CPU as a one-time operation
+//WriteMSR() пишет значение в MSR-регистр на заданном процессоре как разовую операцию
 func WriteMSR(cpu int, msrAddr int64, val uint64) error {
 	msr, err := MSR(cpu)
 	if err != nil {
