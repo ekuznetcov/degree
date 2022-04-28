@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>msr exporter</title>
+</head>
+<body>
+<div>
+    <h1>MSR Exporter</h1>
+</div>
+<div>
+    <p>msr_exporter - это программное средство сбора данных об энергопотреблении ЦПУ на ВС с ОС Linux.</p>
+    <p><strong>поддерживаемые платформы</strong></p>
+    <p>msr_exporter поддерживает все архитектуры процессоров поддерживающие интерфейс RAPL</p>
+    <ul>
+        <li>Intel начиная с архиетктуры Sandy Bridge</li>
+        <li>AMD начиная с архитктуры Pyzen</li>
+    </ul>
+    <p>Для сбора данных msr_exporter использует msr-регистры</p>
+    <p>Всего существует три способа для чтения информации с доменов RAPL:</p>
+    <ul>
+        <li>Читать msr-регистры напрямую с /dev/cpu/%d/msr</li>
+        <li>Через perf_event_open() interface (не поддерживается AMD)</li>
+        <li>Через sysfs powercap (не поддерживается AMD)</li>
+    </ul>
+    <p>Для получения данных с powercup или sysfs используйте <a href="https://github.com/prometheus/node_exporter">node_exporter</a>
+        Для получения данных с ГПУ NVidia используйте <a href="https://github.com/NVIDIA/dcgm-exporter">DCGM-Exporter</a></p>
+    <p>msr_exporter поддерживает домены RAPL package(PP0, PP1, DRAM), platform(PSys)</p>
+    <p>msr_exporter (пока не поддерживает AMD рахитектуру по причине. того, что не удалось выяснить какие регистры используются в AMD процессорах)</p>
+</div>
+</body>
+</html>

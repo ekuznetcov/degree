@@ -3,13 +3,15 @@ package main
 import (
 	"escheduler/msr_exporter/rapl"
 	"fmt"
+	"log"
+	"net/http"
+	"time"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/pkg/errors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"log"
-	"net/http"
 )
 
 var msrCollector = NewMSRCollector()
@@ -100,6 +102,7 @@ func (collector *MSRCollector) Collect(channel chan<- prometheus.Metric) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer handler.Close()
 
 	domains := handler.GetDomains()
 	for _, domain := range domains {
@@ -115,8 +118,6 @@ func (collector *MSRCollector) Collect(channel chan<- prometheus.Metric) {
 			domain.Name,
 		)
 	}
-	handler.Close()
-
 }
 
 type responseWriter struct {
@@ -157,17 +158,22 @@ func main() {
 			<ul>
 				<li>Intel начиная с архиетктуры Sandy Bridge</li>
 				<li>AMD начиная с архитктуры Pyzen</li>
+				<a href="http://localhost:9876">Посмотреть метрики</a>
 			</ul>
 		</body>
 		</html>`))
 	})
 	//metrics page
 	router.Handle("/metrics", promhttp.Handler())
+	//create channel to get metrics
 	ch := make(chan prometheus.Metric)
-	go msrCollector.Collect(ch)
+	go func() {
+		msrCollector.Collect(ch)
+		time.Sleep(time.Millisecond * 500)
+	}()
 	//run http server
-	fmt.Println("Serving requests on port 9100")
-	err := http.ListenAndServe(":9100", router)
+	fmt.Println("Serving requests on port 9876")
+	err := http.ListenAndServe(":9876", router)
 	log.Fatal(err)
 
 }

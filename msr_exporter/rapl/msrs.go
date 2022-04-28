@@ -31,7 +31,7 @@ var PP0 = RAPLDomain{0x4, "PP0", DomainMSRs{0x638, 0x639, 0x63a, 0x63b, 0x0}}
 var PP1 = RAPLDomain{0x8, "PP1", DomainMSRs{0x640, 0x641, 0x642, 0x0, 0x0}}
 
 //PSys в документации intel 3.14.10 именуется как Platform
-var PSys = RAPLDomain{0x16, "PSys", DomainMSRs{0x0, 0x64d, 0x0, 0x0, 0x0}}
+var PSys = RAPLDomain{0x16, "PSys", DomainMSRs{0x65c, 0x64d, 0x0, 0x0, 0x0}}
 
 //MSRPowerUnit определяет MSR для счетчика MSR_RAPL_POWER_UNIT
 const MSRPowerUnit int64 = 0x606
@@ -52,7 +52,7 @@ type PowerLimitSetting struct {
 //RAPLPowerLimit содержит данные в MSR_[DOMAIN]_POWER_LIMIT MSR
 //Этот MSR регистр содержит два ограничения мощности из SDM:
 //"Могут быть указаны два предельных значения мощности, соответствующие временным окнам различных размеров"
-//"Каждый предел мощности обеспечивает независимый контроль ограничения, который позволит ядрам процессоров выйти ниже запрашиваемого уровня мощности."
+//"Каждый предел мощности обеспечивает независимый контроль ограничения мощности, который позволит ядрам процессоров выйти ниже запрашиваемого уровня мощности."
 type RAPLPowerLimit struct {
 	Limit1 PowerLimitSetting
 	Limit2 PowerLimitSetting
